@@ -1,0 +1,13 @@
+{
+  "name": "Funny Money",
+  "short_name": "Funny Money",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1effa",
+  "theme_color": "#f1effa",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
