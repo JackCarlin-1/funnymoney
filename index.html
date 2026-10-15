@@ -172,6 +172,8 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .wbtn svg{color:var(--spend)}
 .wtop{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
 .wtop h2{margin:0;font-size:24px;font-weight:800;color:var(--ink);display:block}
+.wshare{margin-left:auto;padding:8px 14px}
+.wshare.active{border-color:var(--accent);color:var(--accent)}
 .backb{display:flex;align-items:center;gap:2px;background:var(--card);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:700;font-size:15px;padding:8px 14px 8px 8px;border-radius:999px}
 .wsum{display:flex;justify-content:space-between;gap:12px}
 .wsum div{min-width:0}
@@ -231,7 +233,7 @@ html{overflow-x:hidden}
 <button id="clr" class="clr" type="button" style="display:none">Clear all transactions</button>
 </div>
 <div id="pgW" style="display:none">
-<div class="wtop"><button id="wback2" class="backb" type="button" aria-label="Back to tracker"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg><span>Back</span></button><h2>Wishlist</h2></div>
+<div class="wtop"><button id="wback2" class="backb" type="button" aria-label="Back to tracker"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg><span>Back</span></button><h2>Wishlist</h2><button id="wshare" class="backb wshare" type="button" aria-label="Share wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span></button></div>
 <div class="card wsum" id="wsum"></div>
 <div class="card" style="margin-top:12px">
   <input id="wan" name="wish-name" placeholder="What do you want?" maxlength="60" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
@@ -268,6 +270,12 @@ html{overflow-x:hidden}
 <button id="wdel" class="edel" type="button">Delete this item</button></div></div>
 <div id="bdlg" class="dlg" hidden><div class="box" role="alertdialog" aria-modal="true" aria-labelledby="bt"><h3 id="bt">Mark as bought?</h3><p id="bmsg"></p><div class="row2"><button id="bc" class="dc" type="button">Not yet</button><button id="bgo" class="sv" type="button">Yes, bought it</button></div></div></div>
 <div id="tdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="tt"><h3 id="tt">Themes</h3><p>Pick how the app looks on this device.</p><div id="tgrid" class="tgrid"></div><button id="tdone" class="sv sdone" type="button">Done</button></div></div>
+<div id="shdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="sht"><h3 id="sht">Share your wishlist</h3>
+<div id="shoff"><p>Create a private link that anyone can open to see the items on your wishlist: names, prices and notes. They can't see your balance or transactions, and they can't change anything. Notes and links you added to items are visible too.</p><button id="shmake" class="save" type="button">Create link</button></div>
+<div id="shon" style="display:none"><p>Anyone with this link can see your wishlist items. It updates by itself when you change your list.</p><input id="shlink" name="share-link" readonly data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
+<div class="row2"><button id="shcopy" class="sv" type="button">Copy link</button><button id="shsend" class="dc" type="button">Share...</button></div>
+<button id="shstop" class="edel" type="button">Stop sharing</button></div>
+<button id="shclose" class="edel" type="button" style="color:var(--mute)">Close</button></div></div>
 <div id="cdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="ct"><h3 id="ct">Rename categories</h3><p>Choose your own names for your three income types.</p>
 <small class="lbl">Type 1</small><input id="cn-uber" name="cat1" maxlength="18" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
 <small class="lbl">Type 2 (has the bet and payout fields)</small><input id="cn-gambling" name="cat2" maxlength="18" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
@@ -298,7 +306,7 @@ function money(n){return(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{min
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 var $=function(i){return document.getElementById(i)};
 var t0=Date.now(),seen=null,cur={},act={},reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg'].forEach(function(id){
+['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg','shdlg'].forEach(function(id){
   var el=$(id),tm;
   Object.defineProperty(el,'hidden',{get:function(){return el.hasAttribute('hidden')},set:function(v){
     clearTimeout(tm);
@@ -647,6 +655,49 @@ function setTheme(t,anim){
   $('tdone').onclick=function(){$('tdlg').hidden=true};
   setTheme(curTheme,false);
 })();
+var shareTok=null,shareCol=null,smeta=null,shareUid=null,shareTm=null,lastShare='';
+function shareUrl(){return location.origin+'/share.html?id='+shareTok}
+function shareItems(){return wishes.filter(function(w){return !w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)}).map(function(w){return{n:w.n,p:w.p,t:w.t||''}})}
+function pushShare(force){
+  if(!shareTok||!shareCol||!shareUid)return Promise.resolve();
+  var items=shareItems(),sig=JSON.stringify(items);
+  if(!force&&sig===lastShare)return Promise.resolve();
+  return shareCol.doc(shareTok).set({uid:shareUid,items:items,updated:Date.now()}).then(function(){lastShare=sig});
+}
+function schedShare(){if(!shareTok)return;clearTimeout(shareTm);shareTm=setTimeout(function(){pushShare().catch(function(){})},700)}
+function paintShare(){
+  var on=!!shareTok;
+  $('shoff').style.display=on?'none':'block';$('shon').style.display=on?'block':'none';
+  if(on)$('shlink').value=shareUrl();
+  $('wshare').classList.toggle('active',on);
+  $('shsend').style.display=navigator.share?'':'none';
+}
+function randTok(){var a=new Uint8Array(18);crypto.getRandomValues(a);return Array.prototype.map.call(a,function(b){return b.toString(36).padStart(2,'0')}).join('').slice(0,26)}
+$('wshare').onclick=function(){
+  if(!shareCol||!smeta){fail('Sign in to share your wishlist.');return}
+  sfx('open');paintShare();$('shdlg').hidden=false;
+};
+$('shclose').onclick=function(){$('shdlg').hidden=true};
+$('shmake').onclick=async function(){
+  var b=this,tok=randTok();b.disabled=true;
+  shareTok=tok;lastShare='';
+  try{await pushShare(true);await smeta.set({token:tok});sfx('earn')}
+  catch(e){shareTok=null;try{shareCol.doc(tok).delete().catch(function(){})}catch(x){}fail('Could not create the link. Make sure the new Firestore rules from the README are published.')}
+  paintShare();b.disabled=false;
+};
+$('shcopy').onclick=function(){
+  var u=shareUrl(),ok=function(){sfx('tap');note('Link copied.',true)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){fb()})}else fb();
+  function fb(){var i=$('shlink');i.focus();i.select();i.setSelectionRange(0,9999);try{document.execCommand('copy')?ok():note('Press and hold the link to copy it.',false)}catch(e){note('Press and hold the link to copy it.',false)}}
+};
+$('shsend').onclick=function(){try{navigator.share({title:'My wishlist',url:shareUrl()}).catch(function(){})}catch(e){}};
+$('shstop').onclick=async function(){
+  var tok=shareTok;if(!tok)return;
+  var b=this;b.disabled=true;
+  try{await shareCol.doc(tok).delete();await smeta.delete();shareTok=null;lastShare='';sfx('del');$('shdlg').hidden=true;note('Sharing stopped. The old link no longer works.',true)}
+  catch(e){fail()}
+  paintShare();b.disabled=false;
+};
 function applyNames(){
   ['srcrow','esrc','srcf'].forEach(function(id){
     var el=document.getElementById(id);if(!el)return;
@@ -675,13 +726,15 @@ $('cs').onclick=function(){
   if(col&&col.meta)col.meta.set(namesObj());
   $('cdlg').hidden=true;
 };
-var unsub=null,unsubMeta=null,unsubW=null;
+var unsub=null,unsubMeta=null,unsubW=null,unsubS=null;
 window.startCloud=function(c){
   if(unsubMeta){unsubMeta();unsubMeta=null}
   if(unsubW){unsubW();unsubW=null}
   if(unsub){unsub();unsub=null}
-  col=c;wcol=c.wishes||null;
-  if(wcol)unsubW=wcol.onSnapshot(function(s){wishes=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderW()},function(){wishes=[];renderW()});
+  if(unsubS){unsubS();unsubS=null}
+  col=c;wcol=c.wishes||null;shareCol=c.shared||null;smeta=c.smeta||null;shareUid=c.uid||null;shareTok=null;lastShare='';
+  if(smeta)unsubS=smeta.onSnapshot(function(d){shareTok=d&&d.token||null;paintShare();schedShare()},function(){});
+  if(wcol)unsubW=wcol.onSnapshot(function(s){wishes=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderW();schedShare()},function(){wishes=[];renderW()});
   if(c.meta)unsubMeta=c.meta.onSnapshot(takeNames,function(){});
   unsub=c.onSnapshot(function(s){
     cloud=true;
@@ -689,7 +742,7 @@ window.startCloud=function(c){
     render();status();
   },function(){cloud=false;tx=[];render();status()});
 };
-window.stopCloud=function(){if(unsubW){unsubW();unsubW=null}wishes=[];wcol=null;if(unsubMeta){unsubMeta();unsubMeta=null}if(unsub){unsub();unsub=null}cloud=false;col=null;tx=[];render();status()};
+window.stopCloud=function(){if(unsubS){unsubS();unsubS=null}shareTok=null;shareCol=null;smeta=null;shareUid=null;if(unsubW){unsubW();unsubW=null}wishes=[];wcol=null;if(unsubMeta){unsubMeta();unsubMeta=null}if(unsub){unsub();unsub=null}cloud=false;col=null;tx=[];render();status()};
 setTimeout(function(){var n=$('note');if(n&&/@/.test(n.value))n.value=''},900);
 $('so').onclick=function(){if(window.FB)window.FB.signOut()};
 $('exp').onclick=async function(){
@@ -891,10 +944,14 @@ async function main(){
           onSnapshot:function(next,err){return F.onSnapshot(colRef,function(snap){next({docs:snap.docs.map(function(x){return{id:x.id,data:function(){return x.data()}}})})},err)}
         };
       }
+      const sref=F.doc(db,'users',user.uid,'meta','share');
       const txc=mk('tx');
       window.startCloud({
         meta:{set:function(d){return wrap(F.setDoc(metaRef,d))},onSnapshot:function(next,err){return F.onSnapshot(metaRef,function(s){next(s.exists()?s.data():null)},err)}},
         wishes:mk('wishes'),
+        uid:user.uid,
+        shared:{doc:function(id){const r=F.doc(db,'shared',id);return{set:function(d){return wrap(F.setDoc(r,d))},delete:function(){return wrap(F.deleteDoc(r))}}}},
+        smeta:{set:function(d){return wrap(F.setDoc(sref,d))},delete:function(){return wrap(F.deleteDoc(sref))},onSnapshot:function(next,err){return F.onSnapshot(sref,function(s){next(s.exists()?s.data():null)},err)}},
         doc:txc.doc,
         onSnapshot:txc.onSnapshot
       });

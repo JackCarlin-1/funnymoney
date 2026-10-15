@@ -1,27 +1,50 @@
-# Funny Money: deploy on Vercel
+# Funny Money: zip 8 (wishlist sharing)
 
-This is a plain static site (no build step). Files must sit at the TOP LEVEL of the repository.
+New in this version: a Share button on the Wishlist page that makes a read-only link you can send to anyone.
+The link shows only your open wishlist items (name, price, note). No balance, no transactions, no sign-in needed.
+It updates by itself when you change your wishlist, and you can turn it off any time.
 
-## 1. Put the files in a GitHub repository
-1. On github.com click New repository, name it (for example funny-money), choose Private, click Create repository.
-2. Click "uploading an existing file".
-3. Unzip this zip, then drag the FILES inside (index.html, firebase-config.js, manifest.webmanifest, sw.js,
-   the three icon PNGs, vercel.json, README.md) onto the page. Do not drag a folder that contains them.
-4. Click Commit changes.
+## Update steps (do them in this order)
 
-## 2. Deploy on Vercel
-1. Go to vercel.com, sign in with GitHub, click Add New > Project, and Import your repository.
-2. Framework Preset: Other. Leave Build Command and Output Directory empty (or default). Root Directory: ./
-3. Click Deploy. Vercel gives you a link like your-project.vercel.app.
+### 1. Publish the new Firestore rules (required, or Create link will fail)
+Firebase console > Firestore Database > Rules tab. Replace everything with this, then click Publish:
 
-## 3. Allow the new link in Firebase (required)
-Firebase console > Authentication > Settings > Authorized domains > Add domain > your-project.vercel.app
-(without https://). Sign-in will not work on the new link until you do this.
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /users/{uid}/{document=**} {
+          allow read, write: if request.auth != null && request.auth.uid == uid;
+        }
+        match /shared/{token} {
+          allow get: if true;
+          allow create: if request.auth != null
+            && request.resource.data.uid == request.auth.uid
+            && request.resource.data.items.size() <= 300;
+          allow update: if request.auth != null
+            && resource.data.uid == request.auth.uid
+            && request.resource.data.uid == request.auth.uid
+            && request.resource.data.items.size() <= 300;
+          allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+        }
+      }
+    }
 
-## 4. Use it
-Open the link in Safari on your iPhone > Share > Add to Home Screen. Sign in with your existing email and password.
-Your data lives in Firebase, so everything is already there.
+Your private data is still locked to your account. The only new thing is that someone who has the exact long
+link can read that one shared wishlist (nobody can browse or list them).
 
-## Updating later
-Replace the changed files in the repository (Add file > Upload files, or edit on GitHub). Vercel redeploys automatically
-within a minute.
+### 2. Upload the files to GitHub
+Unzip, then in your repository use Add file > Upload files and drop in ALL the files from this zip
+(index.html, share.html, sw.js and the rest). Replace the old ones. Commit changes. Vercel redeploys in about a minute.
+Note share.html is new, and it must sit at the top level next to index.html.
+
+### 3. Reopen the app
+Fully close the Home Screen app (swipe it away) and open it again, maybe twice, so the new version loads.
+
+### 4. Share
+Wishlist page > Share > Create link > Copy link or Share... to send it.
+"Stop sharing" deletes the shared copy and the old link stops working. Creating a new link later gives a new address.
+
+## Good to know
+- Notes on wishlist items are visible to people with the link, and web addresses in notes become tappable. Keep private notes off shared items.
+- Items you mark as bought disappear from the shared list.
+- Anyone you send the link to can forward it. Stop sharing if it spreads further than you want.
