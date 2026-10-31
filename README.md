@@ -1,4 +1,4 @@
-# Funny Money: zip 9 (Subscriptions)
+# Funny Money: zip 10 (balance fits beside the buttons)
 
 New: a Subscriptions button above Wishlist. Add a subscription with a name, price per month and renewal date
 (defaults to today). Each one has "Pay with funny money" (subtracts it from your balance and adds an expense)

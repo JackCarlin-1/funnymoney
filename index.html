@@ -167,11 +167,13 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .pgR{animation:inR .3s cubic-bezier(.2,.8,.3,1)}
 .pgL{animation:inL .3s cubic-bezier(.2,.8,.3,1)}
 .bal{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-.balt{min-width:0}
+.balt{min-width:0;flex:1}
+.balt b{white-space:nowrap}
 .wbtn{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:700;font-size:14px;padding:9px 13px;border-radius:999px;margin-bottom:8px;flex:none}
 .wbtn svg{color:var(--spend)}
 .btns{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:8px;flex:none}
-.btns .wbtn{margin-bottom:0;justify-content:center}
+.btns .wbtn{margin-bottom:0;justify-content:center;padding:7px 11px;font-size:13px;gap:5px}
+.btns .wbtn svg{width:16px;height:16px}
 .sbi .wi1 p{white-space:normal}
 .sbbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .sbpay{padding:9px 6px;font-size:14px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
@@ -564,6 +566,14 @@ function render(){
 render();status();applyNames();
 
 var wishes=[],wcol=null,wid=null,wbid=null,wprev={},pgNow='t';
+function fitBal(){
+  var b=$('bal'),w=b.parentNode;if(!b||!w||!w.clientWidth)return;
+  var sz=56;b.style.fontSize='';
+  while(b.scrollWidth>w.clientWidth&&sz>26){sz-=1;b.style.fontSize=sz+'px'}
+}
+try{new MutationObserver(fitBal).observe($('bal'),{childList:true,characterData:true,subtree:true})}catch(e){}
+window.addEventListener('resize',fitBal);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitBal);
 function balNow(){var b=0;tx.forEach(function(t){if(t.pend)return;b+=t.k=='e'?t.a:-t.a});return r2(b)}
 function showPage(p,anim){
   pgNow=p;
