@@ -170,6 +170,17 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .balt{min-width:0}
 .wbtn{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:700;font-size:14px;padding:9px 13px;border-radius:999px;margin-bottom:8px;flex:none}
 .wbtn svg{color:var(--spend)}
+.btns{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:8px;flex:none}
+.btns .wbtn{margin-bottom:0;justify-content:center}
+.sbi .wi1 p{white-space:normal}
+.sbbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sbpay{padding:9px 6px;font-size:14px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+@keyframes paidin{0%{transform:scale(.97);background:var(--card);border-color:var(--line)}55%{transform:scale(1.025)}100%{transform:none}}
+.sbi.justpaid{animation:paidin .6s cubic-bezier(.2,.8,.3,1)}
+.sbi.paid,.sbi{transition:background-color .4s ease,border-color .4s ease}
+.sbi.paid{border-color:var(--earn);background:color-mix(in srgb,var(--earn) 14%,var(--card))}
+.sbi.paid .wi1 b,.sbi.paid .wi3 span{color:var(--earn);font-weight:700}
+@supports not (background:color-mix(in srgb,red,blue)){.sbi.paid{background:var(--card)}}
 .wtop{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
 .wtop h2{margin:0;font-size:24px;font-weight:800;color:var(--ink);display:block}
 .wshare{margin-left:auto;padding:8px 14px}
@@ -208,7 +219,7 @@ html{overflow-x:hidden}
 </style>
 </head>
 <body>
-<div class="bal"><div class="balt"><small>Funny money balance</small><b id="bal" data-k="bal">$0.00</b></div><button id="wbtn" class="wbtn" type="button" aria-label="Open wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Wishlist</span></button></div>
+<div class="bal"><div class="balt"><small>Funny money balance</small><b id="bal" data-k="bal">$0.00</b></div><div class="btns"><button id="sbtn" class="wbtn" type="button" aria-label="Open subscriptions"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Subscriptions</span></button><button id="wbtn" class="wbtn" type="button" aria-label="Open wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Wishlist</span></button></div></div>
 <div id="pgT">
 <div class="seg kseg">
     <button id="be" class="on e" type="button">Earned</button>
@@ -231,6 +242,18 @@ html{overflow-x:hidden}
 <div id="list"></div>
 </div></div>
 <button id="clr" class="clr" type="button" style="display:none">Clear all transactions</button>
+</div>
+<div id="pgS" style="display:none">
+<div class="wtop"><button id="sback" class="backb" type="button" aria-label="Back to tracker"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg><span>Back</span></button><h2>Subscriptions</h2></div>
+<div class="card wsum" id="sbsum"></div>
+<div class="card" style="margin-top:12px">
+  <input id="sbn" name="sub-name" placeholder="What is it?" maxlength="60" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
+  <div class="mny"><input id="sbp" name="sub-price" inputmode="decimal" placeholder="Price per month" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off"><i class="cur" aria-hidden="true">$</i></div>
+  <small class="lbl">Renews on</small>
+  <input id="sbd" type="date">
+  <button class="save" id="sbadd" type="button">Add subscription</button>
+</div>
+<div id="sblist" style="margin-top:14px"></div>
 </div>
 <div id="pgW" style="display:none">
 <div class="wtop"><button id="wback2" class="backb" type="button" aria-label="Back to tracker"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg><span>Back</span></button><h2>Wishlist</h2><button id="wshare" class="backb wshare" type="button" aria-label="Share wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span></button></div>
@@ -268,6 +291,15 @@ html{overflow-x:hidden}
 <div class="row2"><button id="wc" class="dc" type="button">Cancel</button><button id="ws" class="sv" type="button">Save changes</button></div>
 <button id="wback" class="edel" type="button" style="color:var(--accent);display:none">Move back to wishlist</button>
 <button id="wdel" class="edel" type="button">Delete this item</button></div></div>
+<div id="sbdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="sbt"><h3 id="sbt">Edit subscription</h3>
+<input id="sben" name="sub-edit-name" placeholder="What is it?" maxlength="60" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off">
+<div class="mny"><input id="sbep" name="sub-edit-price" inputmode="decimal" placeholder="Price per month" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off"><i class="cur" aria-hidden="true">$</i></div>
+<small class="lbl">Renews on</small>
+<input id="sbed" type="date">
+<div class="row2"><button id="sbec" class="dc" type="button">Cancel</button><button id="sbes" class="sv" type="button">Save changes</button></div>
+<button id="sbunpaid" class="edel" type="button" style="color:var(--accent);display:none">Mark as unpaid</button>
+<button id="sbedel" class="edel" type="button">Delete this subscription</button></div></div>
+<div id="pydlg" class="dlg" hidden><div class="box" role="alertdialog" aria-modal="true" aria-labelledby="pyt"><h3 id="pyt">Pay with funny money?</h3><p id="pymsg"></p><div class="row2"><button id="pyc" class="dc" type="button">Not yet</button><button id="pygo" class="sv" type="button">Yes, pay it</button></div></div></div>
 <div id="bdlg" class="dlg" hidden><div class="box" role="alertdialog" aria-modal="true" aria-labelledby="bt"><h3 id="bt">Mark as bought?</h3><p id="bmsg"></p><div class="row2"><button id="bc" class="dc" type="button">Not yet</button><button id="bgo" class="sv" type="button">Yes, bought it</button></div></div></div>
 <div id="tdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="tt"><h3 id="tt">Themes</h3><p>Pick how the app looks on this device.</p><div id="tgrid" class="tgrid"></div><button id="tdone" class="sv sdone" type="button">Done</button></div></div>
 <div id="shdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="sht"><h3 id="sht">Share your wishlist</h3>
@@ -306,7 +338,7 @@ function money(n){return(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{min
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 var $=function(i){return document.getElementById(i)};
 var t0=Date.now(),seen=null,cur={},act={},reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg','shdlg'].forEach(function(id){
+['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg','shdlg','sbdlg','pydlg'].forEach(function(id){
   var el=$(id),tm;
   Object.defineProperty(el,'hidden',{get:function(){return el.hasAttribute('hidden')},set:function(v){
     clearTimeout(tm);
@@ -535,15 +567,19 @@ var wishes=[],wcol=null,wid=null,wbid=null,wprev={},pgNow='t';
 function balNow(){var b=0;tx.forEach(function(t){if(t.pend)return;b+=t.k=='e'?t.a:-t.a});return r2(b)}
 function showPage(p,anim){
   pgNow=p;
-  var T=$('pgT'),W=$('pgW'),on=p==='t'?T:W,off=p==='t'?W:T;
-  off.style.display='none';on.style.display='block';
-  $('wbtn').style.display=p==='w'?'none':'flex';
-  if(anim){on.classList.remove('pgR','pgL');void on.offsetWidth;on.classList.add(p==='w'?'pgR':'pgL')}
+  var pages={t:$('pgT'),w:$('pgW'),s:$('pgS')},on=pages[p];
+  Object.keys(pages).forEach(function(k){if(k!==p)pages[k].style.display='none'});
+  on.style.display='block';
+  $('wbtn').parentNode.style.display=p==='t'?'flex':'none';
+  if(anim){on.classList.remove('pgR','pgL');void on.offsetWidth;on.classList.add(p==='t'?'pgL':'pgR')}
   window.scrollTo(0,0);
   if(p==='w')renderW();
+  if(p==='s')renderB();
 }
 $('wbtn').onclick=function(){sfx('open');showPage('w',true)};
 $('wback2').onclick=function(){sfx('tap');showPage('t',true)};
+$('sbtn').onclick=function(){sfx('open');showPage('s',true)};
+$('sback').onclick=function(){sfx('tap');showPage('t',true)};
 function wobj(w){var o={n:w.n,p:w.p,t:w.t||'',c:w.c};if(w.done){o.done=true;o.dn=w.dn||''}return o}
 function renderW(){
   var bal=balNow(),open=wishes.filter(function(w){return !w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)}),done=wishes.filter(function(w){return w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)});
@@ -726,15 +762,127 @@ $('cs').onclick=function(){
   if(col&&col.meta)col.meta.set(namesObj());
   $('cdlg').hidden=true;
 };
+var sbSeen=false,sbPaid={};
+var subs=[],scol=null,sbid=null,unsubB=null;
+function nextRenew(d){
+  var q=(d||'').split('-');if(q.length<3)return null;
+  var y=+q[0],m=+q[1]-1,day=+q[2],t=new Date();t.setHours(0,0,0,0);
+  function at(k){var mm=m+k,dim=new Date(y,mm+1,0).getDate();return new Date(y,mm,Math.min(day,dim))}
+  var k=0,r=at(0);
+  while(r<t&&k<1200){k++;r=at(k)}
+  return r;
+}
+function ymd(r){return r.getFullYear()+'-'+String(r.getMonth()+1).padStart(2,'0')+'-'+String(r.getDate()).padStart(2,'0')}
+function daysUntil(r){var t=new Date();t.setHours(0,0,0,0);return Math.round((r-t)/86400000)}
+function renderB(){
+  var list=subs.map(function(s){var o=Object.assign({},s);o.nx=nextRenew(s.d);o.paid=!!(o.nx&&s.pd&&s.pd===ymd(o.nx));return o}).filter(function(s){return s.nx}).sort(function(a,b){return (a.paid?1:0)-(b.paid?1:0)||a.nx-b.nx||(a.c||0)-(b.c||0)});
+  var tot=0;list.forEach(function(s){tot+=s.p});
+  $('sbsum').innerHTML='<div><small>Per month</small><b>'+money(r2(tot))+'</b></div><div><small>Per year</small><b>'+money(r2(tot*12))+'</b></div><div><small>Subscriptions</small><b>'+list.length+'</b></div>';
+  var oldPos={};Array.prototype.forEach.call($('sblist').querySelectorAll('.sbi'),function(el){oldPos[el.dataset.sid]=el.getBoundingClientRect().top});
+  var h='';
+  if(!list.length)h='<div class="card empty">No subscriptions yet. Add one above.</div>';
+  list.forEach(function(s){
+    var n=daysUntil(s.nx),when=n===0?'Today':n===1?'Tomorrow':'In '+n+' days';
+    h+='<div class="wi sbi'+(s.paid?' paid':'')+'" data-sid="'+s.id+'" tabindex="0"><div class="wi1"><p>'+esc(s.n)+'</p><b>'+money(s.p)+'/mo</b></div><div class="wi3"><span>'+(s.paid?(s.pm=='x'?'Already paid':'Paid with funny money'):'Renews '+s.nx.toLocaleDateString('en-US',{month:'short',day:'numeric'}))+'</span><span>'+(s.paid?'Next: '+s.nx.toLocaleDateString('en-US',{month:'short',day:'numeric'}):when)+'</span></div>'+(s.paid?'':'<div class="sbbtns"><button class="buy sbpay" type="button" data-pay="'+s.id+'">Pay with funny money</button><button class="buy sbpay" type="button" data-done="'+s.id+'">Already paid</button></div>')+'</div>';
+  });
+  $('sblist').innerHTML=h;
+  var firstB=!sbSeen;
+  Array.prototype.forEach.call($('sblist').querySelectorAll('.sbi'),function(el){
+    var id=el.dataset.sid,s=list.filter(function(x){return String(x.id)===id})[0];
+    if(!reduce&&!firstB){
+      if(s&&s.paid&&!sbPaid[id])el.classList.add('justpaid');
+      if(oldPos.hasOwnProperty(id)){
+        var dy=oldPos[id]-el.getBoundingClientRect().top;
+        if(dy){el.style.transition='none';el.style.transform='translateY('+dy+'px)';void el.offsetWidth;el.style.transition='transform .5s cubic-bezier(.2,.8,.3,1),background-color .4s ease,border-color .4s ease';el.style.transform='';setTimeout(function(){el.style.transition=''},560)}
+      }
+    }
+  });
+  sbPaid={};list.forEach(function(s){if(s.paid)sbPaid[String(s.id)]=1});
+  sbSeen=true;
+}
+$('sbd').value=today();
+$('sbadd').onclick=function(){
+  var n=$('sbn').value.trim(),p=num($('sbp').value),d=$('sbd').value;
+  if(!n){$('sbn').focus();return}
+  if(!(p>0)){$('sbp').focus();return}
+  if(!d){$('sbd').focus();return}
+  if(!scol){fail('Sign in to save your subscriptions.');return}
+  var id=String(Date.now());
+  $('sbn').value='';$('sbp').value='';$('sbd').value=today();
+  sfx('earn');
+  scol.doc(id).set({n:n.slice(0,60),p:r2(p),d:d,c:Date.now()}).catch(fail);
+};
+var pyid=null;
+$('sblist').addEventListener('click',function(e){
+  var db=e.target.closest('[data-done]');
+  if(db){
+    e.stopPropagation();
+    var s1=subs.filter(function(x){return String(x.id)===db.dataset.done})[0];if(!s1||!scol)return;
+    var nx1=nextRenew(s1.d);if(!nx1)return;
+    sfx('tap');
+    scol.doc(String(s1.id)).set({n:s1.n,p:s1.p,d:s1.d,c:s1.c||Date.now(),pd:ymd(nx1),pm:'x'}).catch(fail);
+    return;
+  }
+  var pb=e.target.closest('[data-pay]');
+  if(pb){
+    e.stopPropagation();
+    var s0=subs.filter(function(x){return String(x.id)===pb.dataset.pay})[0];if(!s0)return;
+    pyid=String(s0.id);sfx('open');
+    var bal=balNow();
+    $('pymsg').textContent='This subtracts '+money(s0.p)+' from your funny money for "'+s0.n+'" and marks it paid until it renews.'+(bal<s0.p?' It is more than your current balance of '+money(bal)+'.':'');
+    $('pydlg').hidden=false;return;
+  }
+  var r=e.target.closest('.sbi');if(!r)return;
+  var s=subs.filter(function(x){return String(x.id)===r.dataset.sid})[0];if(!s)return;
+  sfx('open');sbid=String(s.id);
+  $('sben').value=s.n;$('sbep').value=s.p;$('sbed').value=s.d||today();
+  var nx0=nextRenew(s.d);$('sbunpaid').style.display=(nx0&&s.pd===ymd(nx0))?'block':'none';
+  $('sbdlg').hidden=false;
+});
+$('pyc').onclick=function(){$('pydlg').hidden=true};
+$('pygo').onclick=async function(){
+  var s=subs.filter(function(x){return String(x.id)===pyid})[0];if(!s||!scol||!col)return;
+  var nx=nextRenew(s.d);if(!nx)return;
+  var b=this;b.disabled=true;
+  var id=String(Date.now()),t={k:'s',a:s.p,n:s.n,d:today(),c:Date.now()};
+  try{
+    await col.doc(id).set(t);
+    await scol.doc(pyid).set({n:s.n,p:s.p,d:s.d,c:s.c||Date.now(),pd:ymd(nx)});
+    sfx('spend');$('pydlg').hidden=true;
+  }catch(e){fail()}
+  b.disabled=false;
+};
+$('sbunpaid').onclick=async function(){
+  var s=subs.filter(function(x){return String(x.id)===sbid})[0];if(!s||!scol)return;
+  try{await scol.doc(sbid).set({n:s.n,p:s.p,d:s.d,c:s.c||Date.now()});sfx('tap');$('sbdlg').hidden=true}catch(e){fail()}
+};
+$('sbec').onclick=function(){$('sbdlg').hidden=true};
+$('sbes').onclick=async function(){
+  var s=subs.filter(function(x){return String(x.id)===sbid})[0];if(!s||!scol)return;
+  var n=$('sben').value.trim(),p=num($('sbep').value),d=$('sbed').value;
+  if(!n){$('sben').focus();return}
+  if(!(p>0)){$('sbep').focus();return}
+  if(!d){$('sbed').focus();return}
+  var b=this;b.disabled=true;
+  try{await scol.doc(sbid).set(Object.assign({n:n.slice(0,60),p:r2(p),d:d,c:s.c||Date.now()},s.pd&&d===s.d?(s.pm?{pd:s.pd,pm:s.pm}:{pd:s.pd}):{}));sfx('tap');$('sbdlg').hidden=true}catch(e){fail()}
+  b.disabled=false;
+};
+$('sbedel').onclick=async function(){
+  if(!scol||!sbid)return;
+  sfx('del');
+  try{await scol.doc(sbid).delete();$('sbdlg').hidden=true}catch(e){fail()}
+};
 var unsub=null,unsubMeta=null,unsubW=null,unsubS=null;
 window.startCloud=function(c){
   if(unsubMeta){unsubMeta();unsubMeta=null}
   if(unsubW){unsubW();unsubW=null}
   if(unsub){unsub();unsub=null}
   if(unsubS){unsubS();unsubS=null}
-  col=c;wcol=c.wishes||null;shareCol=c.shared||null;smeta=c.smeta||null;shareUid=c.uid||null;shareTok=null;lastShare='';
+  if(unsubB){unsubB();unsubB=null}
+  col=c;wcol=c.wishes||null;scol=c.subs||null;shareCol=c.shared||null;smeta=c.smeta||null;shareUid=c.uid||null;shareTok=null;lastShare='';
   if(smeta)unsubS=smeta.onSnapshot(function(d){shareTok=d&&d.token||null;paintShare();schedShare()},function(){});
   if(wcol)unsubW=wcol.onSnapshot(function(s){wishes=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderW();schedShare()},function(){wishes=[];renderW()});
+  if(scol)unsubB=scol.onSnapshot(function(s){subs=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderB()},function(){subs=[];renderB()});
   if(c.meta)unsubMeta=c.meta.onSnapshot(takeNames,function(){});
   unsub=c.onSnapshot(function(s){
     cloud=true;
@@ -742,7 +890,7 @@ window.startCloud=function(c){
     render();status();
   },function(){cloud=false;tx=[];render();status()});
 };
-window.stopCloud=function(){if(unsubS){unsubS();unsubS=null}shareTok=null;shareCol=null;smeta=null;shareUid=null;if(unsubW){unsubW();unsubW=null}wishes=[];wcol=null;if(unsubMeta){unsubMeta();unsubMeta=null}if(unsub){unsub();unsub=null}cloud=false;col=null;tx=[];render();status()};
+window.stopCloud=function(){if(unsubB){unsubB();unsubB=null}subs=[];scol=null;renderB();if(unsubS){unsubS();unsubS=null}shareTok=null;shareCol=null;smeta=null;shareUid=null;if(unsubW){unsubW();unsubW=null}wishes=[];wcol=null;if(unsubMeta){unsubMeta();unsubMeta=null}if(unsub){unsub();unsub=null}cloud=false;col=null;tx=[];render();status()};
 setTimeout(function(){var n=$('note');if(n&&/@/.test(n.value))n.value=''},900);
 $('so').onclick=function(){if(window.FB)window.FB.signOut()};
 $('exp').onclick=async function(){
@@ -949,6 +1097,7 @@ async function main(){
       window.startCloud({
         meta:{set:function(d){return wrap(F.setDoc(metaRef,d))},onSnapshot:function(next,err){return F.onSnapshot(metaRef,function(s){next(s.exists()?s.data():null)},err)}},
         wishes:mk('wishes'),
+        subs:mk('subs'),
         uid:user.uid,
         shared:{doc:function(id){const r=F.doc(db,'shared',id);return{set:function(d){return wrap(F.setDoc(r,d))},delete:function(){return wrap(F.deleteDoc(r))}}}},
         smeta:{set:function(d){return wrap(F.setDoc(sref,d))},delete:function(){return wrap(F.deleteDoc(sref))},onSnapshot:function(next,err){return F.onSnapshot(sref,function(s){next(s.exists()?s.data():null)},err)}},
