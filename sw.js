@@ -1,4 +1,4 @@
-const V = 'fm-v20';
+const V = 'fm-v27';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './firebase-config.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const HOSTS = [self.location.host, 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 self.addEventListener('install', e => {

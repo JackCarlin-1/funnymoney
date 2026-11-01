@@ -171,9 +171,8 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .balt b{white-space:nowrap}
 .wbtn{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);color:var(--ink);font:inherit;font-weight:700;font-size:14px;padding:9px 13px;border-radius:999px;margin-bottom:8px;flex:none}
 .wbtn svg{color:var(--spend)}
-.btns{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:8px;flex:none}
-.btns .wbtn{margin-bottom:0;justify-content:center;padding:7px 11px;font-size:13px;gap:5px}
-.btns .wbtn svg{width:16px;height:16px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0 12px}
+.btns .wbtn{margin:0;width:100%;justify-content:center;padding:10px 12px;font-size:14px;gap:6px}
 .sbi .wi1 p{white-space:normal}
 .sbbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .sbpay{padding:9px 6px;font-size:14px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
@@ -197,7 +196,8 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .wi1{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .wi1 p{margin:0;flex:1;min-width:0;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wi1 b{font-variant-numeric:tabular-nums;font-size:16px}
-.wnote{font-size:13px;color:var(--mute);margin:2px 0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wnote a{color:var(--accent);font-weight:600;text-decoration:underline}
+.wnote{font-size:13px;color:var(--mute);margin:2px 0 8px;overflow-wrap:anywhere}
 .wbar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;margin-top:8px}
 .wbar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.3,1)}
 .wi.ok .wbar i{background:var(--earn)}
@@ -205,6 +205,31 @@ input[type="date"]::-webkit-datetime-edit{padding:0}
 .wi.ok .wi3 span{color:var(--earn);font-weight:700}
 .buy{border:1px solid var(--line);background:var(--bg);color:var(--accent);font:inherit;font-weight:700;font-size:13px;padding:6px 12px;border-radius:10px}
 .wi.done{opacity:.75}
+.star{flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;margin:-4px 0 -4px -4px;background:none;border:0;border-radius:50%;color:var(--mute)}
+.star svg{fill:none;transition:fill .25s ease,transform .3s cubic-bezier(.3,1.6,.5,1)}
+.star.on{color:var(--pend)}
+.star.on svg{fill:currentColor;transform:scale(1.1)}
+.wi.pri{border-color:var(--pend);background:color-mix(in srgb,var(--pend) 26%,var(--card))}
+.wbar{height:10px;background:rgba(127,127,160,.28)}
+.wdep{display:grid;grid-template-columns:1.25fr 1.25fr 1fr;gap:8px;margin-top:10px}
+.wdep .buy{padding:9px 4px;font-size:13px;line-height:1.2}
+.pctw{position:relative}
+.pctw .suf{position:absolute;right:14px;top:13px;font-style:normal;font-size:17px;line-height:20px;color:var(--mute);pointer-events:none}
+.pctw input{padding-right:34px}
+.cuamt{min-height:22px;margin:-2px 2px 14px;font-weight:700;font-size:15px;color:var(--accent)}
+.cuamt.warn{color:var(--spend)}
+.wgo{display:flex;gap:8px;margin-top:10px}
+.rst{flex:none;padding:11px 14px;font-size:13px;color:var(--mute)}
+.gobuy{flex:1;padding:11px 12px;font-size:15px;background:var(--pend);color:#1b1500;border-color:var(--pend)}
+.wi.full{border-color:var(--pend);background:color-mix(in srgb,var(--pend) 38%,var(--card))}
+.wi.full .wbar i{background:linear-gradient(90deg,#ffcf3f,#ffb300)}
+.wi.full .wi3 span{color:var(--pend);font-weight:700}
+@keyframes goldin{0%{transform:scale(.97)}45%{transform:scale(1.035);box-shadow:0 0 0 8px color-mix(in srgb,var(--pend) 35%,transparent)}100%{transform:none;box-shadow:0 0 0 0 transparent}}
+.wi.justfull{animation:goldin .8s cubic-bezier(.2,.8,.3,1)}
+@supports not (background:color-mix(in srgb,red,blue)){.wi.pri,.wi.full{background:var(--card)}}
+@keyframes priin{0%{transform:scale(.97)}50%{transform:scale(1.03);box-shadow:0 0 0 6px color-mix(in srgb,var(--pend) 32%,transparent)}100%{transform:none;box-shadow:0 0 0 0 transparent}}
+.wi.justpri{animation:priin .65s cubic-bezier(.2,.8,.3,1)}
+.wi{transition:background-color .4s ease,border-color .4s ease}
 .wbh{font-size:18px}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .thm{display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:10px;color:var(--ink);font:inherit;text-align:left}
@@ -221,8 +246,9 @@ html{overflow-x:hidden}
 </style>
 </head>
 <body>
-<div class="bal"><div class="balt"><small>Funny money balance</small><b id="bal" data-k="bal">$0.00</b></div><div class="btns"><button id="sbtn" class="wbtn" type="button" aria-label="Open subscriptions"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Subscriptions</span></button><button id="wbtn" class="wbtn" type="button" aria-label="Open wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Wishlist</span></button></div></div>
+<div class="bal"><div class="balt"><small>Funny money balance</small><b id="bal" data-k="bal">$0.00</b></div></div>
 <div id="pgT">
+<div class="btns"><button id="sbtn" class="wbtn" type="button" aria-label="Open subscriptions"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Subscriptions</span></button><button id="wbtn" class="wbtn" type="button" aria-label="Open wishlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Wishlist</span></button></div>
 <div class="seg kseg">
     <button id="be" class="on e" type="button">Earned</button>
     <button id="bs" class="s" type="button">Spent</button>
@@ -302,6 +328,10 @@ html{overflow-x:hidden}
 <button id="sbunpaid" class="edel" type="button" style="color:var(--accent);display:none">Mark as unpaid</button>
 <button id="sbedel" class="edel" type="button">Delete this subscription</button></div></div>
 <div id="pydlg" class="dlg" hidden><div class="box" role="alertdialog" aria-modal="true" aria-labelledby="pyt"><h3 id="pyt">Pay with funny money?</h3><p id="pymsg"></p><div class="row2"><button id="pyc" class="dc" type="button">Not yet</button><button id="pygo" class="sv" type="button">Yes, pay it</button></div></div></div>
+<div id="cudlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="cut"><h3 id="cut">Add funny money</h3><p id="cumsg"></p>
+<div class="pctw"><input id="cua" name="deposit-percent" inputmode="decimal" placeholder="Percent of the price" data-lpignore="true" data-1p-ignore data-form-type="other" autocomplete="off"><i class="suf" aria-hidden="true">%</i></div>
+<div id="cuamt" class="cuamt"></div>
+<div class="row2"><button id="cuc" class="dc" type="button">Cancel</button><button id="cug" class="sv" type="button">Add</button></div></div></div>
 <div id="bdlg" class="dlg" hidden><div class="box" role="alertdialog" aria-modal="true" aria-labelledby="bt"><h3 id="bt">Mark as bought?</h3><p id="bmsg"></p><div class="row2"><button id="bc" class="dc" type="button">Not yet</button><button id="bgo" class="sv" type="button">Yes, bought it</button></div></div></div>
 <div id="tdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="tt"><h3 id="tt">Themes</h3><p>Pick how the app looks on this device.</p><div id="tgrid" class="tgrid"></div><button id="tdone" class="sv sdone" type="button">Done</button></div></div>
 <div id="shdlg" class="dlg" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="sht"><h3 id="sht">Share your wishlist</h3>
@@ -340,7 +370,7 @@ function money(n){return(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{min
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 var $=function(i){return document.getElementById(i)};
 var t0=Date.now(),seen=null,cur={},act={},reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg','shdlg','sbdlg','pydlg'].forEach(function(id){
+['pdlg','edlg','ddlg','dlg','toast','auth','sdlg','cdlg','wdlg','bdlg','tdlg','shdlg','sbdlg','pydlg','cudlg'].forEach(function(id){
   var el=$(id),tm;
   Object.defineProperty(el,'hidden',{get:function(){return el.hasAttribute('hidden')},set:function(v){
     clearTimeout(tm);
@@ -418,6 +448,17 @@ $('ddg').onclick=async function(){
   $('ddlg').hidden=true;g.disabled=false;
 };
 function esc(s){return s.replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function linkify(t){
+  var out='',last=0,re=/(https?:\/\/|www\.)[^\s<>"]+/g,m;
+  while((m=re.exec(t))){
+    var u=m[0],tail='',tm=u.match(/[.,;:!?)\]]+$/);
+    if(tm){tail=tm[0];u=u.slice(0,-tail.length)}
+    if(u.length<=m[1].length){continue}
+    out+=esc(t.slice(last,m.index))+'<a href="'+esc(/^www\./.test(u)?'https://'+u:u)+'" target="_blank" rel="noopener noreferrer">'+esc(u)+'</a>'+esc(tail);
+    last=m.index+m[0].length;
+  }
+  return out+esc(t.slice(last));
+}
 function status(){
   $('sync').textContent=cloud?'Synced across your devices':'Not signed in';
 }
@@ -544,7 +585,7 @@ function render(){
   $('catsE').innerHTML=['uber','gambling','other'].map(function(k){return '<div class="cat"><small>'+SRC[k]+'</small><b data-k="c-'+k+'" class="'+(ss[k]<0?'neg':'')+'">'+money(ss[k])+'</b></div>'}).join('')+'<div class="cat tot"><small>Total earned</small><b data-k="c-tot" class="'+(et<0?'neg':'')+'">'+money(et)+'</b></div>';
   $('catsS').innerHTML='<div class="cat tot"><small>Total spent</small><b data-k="c-sp" class="neg">'+money(sp)+'</b></div>';
   $('cpe').classList.toggle('shut',kind!='e');$('cps').classList.toggle('shut',kind!='s');
-  var bal=0;tx.forEach(function(t){if(t.pend)return;bal+=t.k=='e'?t.a:-t.a});
+  var bal=0;tx.forEach(function(t){if(t.pend)return;bal+=t.k=='e'?t.a:-t.a});bal=r2(bal-resv());
   ['uber','gambling','other'].forEach(function(k){countTo('c-'+k,ss[k])});countTo('c-tot',et);countTo('c-sp',sp);
   var b=$('bal');b.textContent=money(bal);b.className=bal<0?'neg':'';countTo('bal',bal);
   var vb=$('views');
@@ -574,13 +615,14 @@ function fitBal(){
 try{new MutationObserver(fitBal).observe($('bal'),{childList:true,characterData:true,subtree:true})}catch(e){}
 window.addEventListener('resize',fitBal);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitBal);
-function balNow(){var b=0;tx.forEach(function(t){if(t.pend)return;b+=t.k=='e'?t.a:-t.a});return r2(b)}
+function dAmt(w,pc){var a=Math.min(r2(w.p*pc/100),r2(w.p-(w.sv||0)));return a%1===0?'$'+a.toLocaleString('en-US'):money(a)}
+function resv(){var r=0;(wishes||[]).forEach(function(w){if(!w.done&&w.sv)r+=w.sv});return r2(r)}
+function balNow(){var b=0;tx.forEach(function(t){if(t.pend)return;b+=t.k=='e'?t.a:-t.a});return r2(b-resv())}
 function showPage(p,anim){
   pgNow=p;
   var pages={t:$('pgT'),w:$('pgW'),s:$('pgS')},on=pages[p];
   Object.keys(pages).forEach(function(k){if(k!==p)pages[k].style.display='none'});
   on.style.display='block';
-  $('wbtn').parentNode.style.display=p==='t'?'flex':'none';
   if(anim){on.classList.remove('pgR','pgL');void on.offsetWidth;on.classList.add(p==='t'?'pgL':'pgR')}
   window.scrollTo(0,0);
   if(p==='w')renderW();
@@ -590,18 +632,35 @@ $('wbtn').onclick=function(){sfx('open');showPage('w',true)};
 $('wback2').onclick=function(){sfx('tap');showPage('t',true)};
 $('sbtn').onclick=function(){sfx('open');showPage('s',true)};
 $('sback').onclick=function(){sfx('tap');showPage('t',true)};
-function wobj(w){var o={n:w.n,p:w.p,t:w.t||'',c:w.c};if(w.done){o.done=true;o.dn=w.dn||''}return o}
+function wobj(w){var o={n:w.n,p:w.p,t:w.t||'',c:w.c};if(w.done){o.done=true;o.dn=w.dn||''}else{if(w.pri)o.pri=w.pri;if(w.sv>0)o.sv=w.sv}return o}
+function wsort(a,b){return ((b.pri||0)>0)-((a.pri||0)>0)||(b.pri||0)-(a.pri||0)||(b.c||0)-(a.c||0)}
+var wSeen=false,wPri={},wFull={};
 function renderW(){
-  var bal=balNow(),open=wishes.filter(function(w){return !w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)}),done=wishes.filter(function(w){return w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)});
+  var bal=balNow(),open=wishes.filter(function(w){return !w.done}).sort(wsort),done=wishes.filter(function(w){return w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)});
   var total=0,aff=0;open.forEach(function(w){total+=w.p;if(bal>=w.p)aff++});
-  $('wsum').innerHTML='<div><small>Wishlist total</small><b>'+money(r2(total))+'</b></div><div><small>Items</small><b>'+open.length+'</b></div><div class="'+(aff?'ok':'')+'"><small>You can afford</small><b>'+aff+'</b></div>';
+  $('wsum').innerHTML='<div><small>Wishlist total</small><b>'+money(r2(total))+'</b></div><div><small>Items</small><b>'+open.length+'</b></div><div><small>Set aside</small><b>'+money(resv())+'</b></div>';
   var h='';
   if(!open.length)h='<div class="card empty">Nothing on your wishlist yet. Add something you want above.</div>';
   open.forEach(function(w){
-    var pct=Math.max(0,Math.min(100,bal/w.p*100)),ok=bal>=w.p,prev=wprev.hasOwnProperty(w.id)?wprev[w.id]:0;
-    h+='<div class="wi'+(ok?' ok':'')+'" data-wid="'+w.id+'" tabindex="0"><div class="wi1"><p>'+esc(w.n)+'</p><b>'+money(w.p)+'</b></div>'+(w.t?'<div class="wnote">'+esc(w.t)+'</div>':'')+'<div class="wbar"><i data-w="'+pct.toFixed(1)+'" data-k="'+w.id+'" style="width:'+prev+'%"></i></div><div class="wi3"><span>'+(ok?'You can afford this':'Need '+money(r2(w.p-bal))+' more')+'</span><button class="buy" type="button" data-buy="'+w.id+'">Bought it</button></div></div>';
+    var sv=Math.min(w.sv||0,w.p),full=sv>=w.p-0.001,pct=Math.max(0,Math.min(100,sv/w.p*100)),prev=wprev.hasOwnProperty(w.id)?wprev[w.id]:0,shown=full?100:Math.min(99,Math.floor(pct));
+    h+='<div class="wi'+(w.pri?' pri':'')+(full?' full':'')+'" data-wid="'+w.id+'" tabindex="0"><div class="wi1"><button class="star'+(w.pri?' on':'')+'" type="button" data-pri="'+w.id+'" aria-label="'+(w.pri?'Remove priority':'Prioritize')+'" aria-pressed="'+(w.pri?'true':'false')+'"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.1 8.6 22 9.3 16.8 14 18.3 21 12 17.4 5.7 21 7.2 14 2 9.3 8.9 8.6"/></svg></button><p>'+esc(w.n)+'</p><b>'+money(w.p)+'</b></div>'+(w.t?'<div class="wnote">'+linkify(w.t)+'</div>':'')+'<div class="wbar"><i data-w="'+pct.toFixed(1)+'" data-k="'+w.id+'" style="width:'+prev+'%"></i></div><div class="wi3"><span>'+(full?'Fully funded':money(sv)+' of '+money(w.p))+'</span><span>'+shown+'%</span></div>'+(full?'<div class="wgo"><button class="buy rst" type="button" data-reset="'+w.id+'">Reset</button><button class="buy gobuy" type="button" data-buy="'+w.id+'">Bought it!</button></div>':'<div class="wdep"><button class="buy" type="button" data-dep="5">5% ('+dAmt(w,5)+')</button><button class="buy" type="button" data-dep="10">10% ('+dAmt(w,10)+')</button><button class="buy" type="button" data-dep="c">Custom</button></div>')+'</div>';
   });
+  var oldPos={};Array.prototype.forEach.call($('wlist').querySelectorAll('.wi'),function(el){oldPos[el.dataset.wid]=el.getBoundingClientRect().top});
+  var vis=$('pgW').style.display!=='none';
   $('wlist').innerHTML=h;
+  Array.prototype.forEach.call($('wlist').querySelectorAll('.wi'),function(el){
+    var id=el.dataset.wid,w=findW(id);
+    if(!reduce&&wSeen&&vis){
+      if(w&&w.pri&&!wPri[id])el.classList.add('justpri');
+      if(w&&(w.sv||0)>=w.p-0.001&&!wFull[id])el.classList.add('justfull');
+      if(oldPos.hasOwnProperty(id)){
+        var dy=oldPos[id]-el.getBoundingClientRect().top;
+        if(dy){el.style.transition='none';el.style.transform='translateY('+dy+'px)';void el.offsetWidth;el.style.transition='transform .55s cubic-bezier(.2,.8,.3,1),background-color .4s ease,border-color .4s ease';el.style.transform='';setTimeout(function(){el.style.transition=''},600)}
+      }
+    }
+  });
+  wPri={};wFull={};open.forEach(function(w){if(w.pri)wPri[String(w.id)]=1;if((w.sv||0)>=w.p-0.001)wFull[String(w.id)]=1});
+  if(wishes.length||vis)wSeen=true;
   var bars=$('wlist').querySelectorAll('.wbar i');
   requestAnimationFrame(function(){requestAnimationFrame(function(){Array.prototype.forEach.call(bars,function(i){i.style.width=i.dataset.w+'%';wprev[i.dataset.k]=+i.dataset.w})})});
   var bh=$('wbh');
@@ -622,7 +681,68 @@ $('wadd').onclick=function(){
   sfx('earn');
   wcol.doc(id).set(w).catch(fail);
 };
+var cuid=null;
+function deposit(id,amt){
+  var w=findW(id);if(!w||!wcol)return false;
+  var rem=r2(w.p-(w.sv||0));amt=Math.min(r2(amt),rem);
+  if(!(amt>0))return false;
+  var bal=balNow();
+  if(amt>bal+0.001){fail('Not enough funny money. You have '+money(bal)+'.');return false}
+  var o=wobj(w);o.sv=r2((w.sv||0)+amt);
+  sfx(o.sv>=w.p-0.001?'win':'earn');
+  wcol.doc(String(w.id)).set(o).catch(fail);
+  return true;
+}
+$('cuc').onclick=function(){$('cudlg').hidden=true};
+function cuCalc(){
+  var w=findW(cuid),pc=num($('cua').value),el=$('cuamt');
+  if(!w||!(pc>0)){el.textContent='';el.className='cuamt';return null}
+  var rem=r2(w.p-(w.sv||0)),raw=r2(w.p*pc/100),amt=Math.min(raw,rem),bal=balNow();
+  if(amt>bal+0.001){el.textContent=money(amt)+' is more than your balance of '+money(bal)+'.';el.className='cuamt warn'}
+  else if(raw>rem){el.textContent='Capped at '+money(amt)+' to finish this item.';el.className='cuamt'}
+  else{el.textContent=pc+'% = '+money(amt);el.className='cuamt'}
+  return amt;
+}
+$('cua').addEventListener('input',cuCalc);
+$('cug').onclick=function(){
+  var a=cuCalc();
+  if(!(a>0)){$('cua').focus();return}
+  if(deposit(cuid,a))$('cudlg').hidden=true;
+};
 $('wlist').addEventListener('click',function(e){
+  if(e.target.closest('a'))return;
+  var rs=e.target.closest('[data-reset]');
+  if(rs){
+    e.stopPropagation();
+    var w2=findW(rs.dataset.reset);if(!w2||!wcol)return;
+    var o2=wobj(w2);delete o2.sv;
+    sfx('tap');
+    wcol.doc(String(w2.id)).set(o2).catch(fail);
+    return;
+  }
+  var dp=e.target.closest('[data-dep]');
+  if(dp){
+    e.stopPropagation();
+    var wr=dp.closest('.wi'),w1=findW(wr.dataset.wid);if(!w1)return;
+    if(dp.dataset.dep==='c'){
+      cuid=String(w1.id);sfx('open');
+      var mx=Math.min(r2(w1.p-(w1.sv||0)),Math.max(0,balNow())),mp=Math.floor(mx/w1.p*1000)/10;
+      $('cumsg').textContent='"'+w1.n+'" costs '+money(w1.p)+'. Type the percent you want to add. The most you can add now is '+mp+'% ('+money(mx)+').';
+      $('cuamt').textContent='';$('cuamt').className='cuamt';
+      $('cua').value='';$('cudlg').hidden=false;
+      setTimeout(function(){$('cua').focus()},60);return;
+    }
+    deposit(w1.id,w1.p*(+dp.dataset.dep)/100);return;
+  }
+  var st=e.target.closest('[data-pri]');
+  if(st){
+    e.stopPropagation();
+    var w0=findW(st.dataset.pri);if(!w0||!wcol)return;
+    var o0=wobj(w0);if(w0.pri)delete o0.pri;else o0.pri=Date.now();
+    sfx(w0.pri?'tap':'earn');
+    wcol.doc(String(w0.id)).set(o0).catch(fail);
+    return;
+  }
   var b=e.target.closest('[data-buy]');
   if(b){e.stopPropagation();askBuy(b.dataset.buy);return}
   var r=e.target.closest('.wi');if(r)editWish(r.dataset.wid);
@@ -642,7 +762,7 @@ $('ws').onclick=async function(){
   var n=$('wn').value.trim(),p=num($('wp').value);
   if(!n){$('wn').focus();return}
   if(!(p>0)){$('wp').focus();return}
-  var o=wobj(w);o.n=n.slice(0,60);o.p=r2(p);o.t=$('wtn').value.trim().slice(0,120);
+  var o=wobj(w);o.n=n.slice(0,60);o.p=r2(p);o.t=$('wtn').value.trim().slice(0,120);if(o.sv>o.p)o.sv=o.p;
   var b=this;b.disabled=true;
   try{await wcol.doc(wid).set(o);sfx('tap');$('wdlg').hidden=true}catch(e){fail()}
   b.disabled=false;
@@ -661,14 +781,14 @@ function askBuy(id){
   var w=findW(id);if(!w)return;
   sfx('open');wbid=String(id);
   var bal=balNow();
-  $('bmsg').textContent='This adds a '+money(w.p)+' expense for "'+w.n+'" and moves it to Bought.'+(bal<w.p?' It is more than your current balance of '+money(bal)+'.':'');
+  $('bmsg').textContent='"'+w.n+'" is fully funded. This moves it to Bought and adds a '+money(w.p)+' expense. Your balance stays the same, since the money is already set aside.';
   $('bdlg').hidden=false;
 }
 $('bc').onclick=function(){$('bdlg').hidden=true};
 $('bgo').onclick=async function(){
   var w=findW(wbid);if(!w||!wcol||!col)return;
   var b=this;b.disabled=true;
-  var id=String(Date.now()),t={k:'s',a:w.p,n:w.n,d:today(),c:Date.now()},o=wobj(w);o.done=true;o.dn=today();
+  var id=String(Date.now()),t={k:'s',a:w.p,n:w.n,d:today(),c:Date.now()},o=wobj(w);delete o.pri;delete o.sv;o.done=true;o.dn=today();
   try{
     await col.doc(id).set(t);
     await wcol.doc(wbid).set(o);
@@ -703,7 +823,7 @@ function setTheme(t,anim){
 })();
 var shareTok=null,shareCol=null,smeta=null,shareUid=null,shareTm=null,lastShare='';
 function shareUrl(){return location.origin+'/share.html?id='+shareTok}
-function shareItems(){return wishes.filter(function(w){return !w.done}).sort(function(a,b){return (b.c||0)-(a.c||0)}).map(function(w){return{n:w.n,p:w.p,t:w.t||''}})}
+function shareItems(){return wishes.filter(function(w){return !w.done}).sort(wsort).map(function(w){return{n:w.n,p:w.p,t:w.t||''}})}
 function pushShare(force){
   if(!shareTok||!shareCol||!shareUid)return Promise.resolve();
   var items=shareItems(),sig=JSON.stringify(items);
@@ -891,7 +1011,7 @@ window.startCloud=function(c){
   if(unsubB){unsubB();unsubB=null}
   col=c;wcol=c.wishes||null;scol=c.subs||null;shareCol=c.shared||null;smeta=c.smeta||null;shareUid=c.uid||null;shareTok=null;lastShare='';
   if(smeta)unsubS=smeta.onSnapshot(function(d){shareTok=d&&d.token||null;paintShare();schedShare()},function(){});
-  if(wcol)unsubW=wcol.onSnapshot(function(s){wishes=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderW();schedShare()},function(){wishes=[];renderW()});
+  if(wcol)unsubW=wcol.onSnapshot(function(s){wishes=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});render();schedShare()},function(){wishes=[];render()});
   if(scol)unsubB=scol.onSnapshot(function(s){subs=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o});renderB()},function(){subs=[];renderB()});
   if(c.meta)unsubMeta=c.meta.onSnapshot(takeNames,function(){});
   unsub=c.onSnapshot(function(s){
